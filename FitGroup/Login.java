@@ -14,14 +14,9 @@ public class Login {
 
     public Login(){
         prepareGUI();
-        Scanner userScanner;    
-        try {
-            userScanner = new Scanner(new File("./FitGroup/users.txt"));
-        } catch (FileNotFoundException e) {
-            userScanner = new Scanner(System.in);
-            System.out.println("ERROR: users.txt does not exist");
-        }
-        System.out.println(userScanner.next());
+
+        System.out.println("HELLO WORLD");
+
     }
 
     private void prepareGUI(){
