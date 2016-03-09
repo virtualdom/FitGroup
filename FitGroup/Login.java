@@ -31,7 +31,7 @@ public class Login {
             }        
         });
         
-        messageText = new JLabel("                        ",JLabel.CENTER);
+        messageText = new JLabel("                                   ",JLabel.CENTER);
         messageText.setForeground(Color.red);
         JPanel messagePanel = new JPanel();
         messagePanel.add(messageText);
@@ -83,7 +83,8 @@ public class Login {
                 else messageText.setText("Username and password do not match.");
            	}
            	else {
-            	// Signup code goes here
+            	mainFrame.setVisible(false);
+                SignUp signup = new SignUp(db);
            	} 
        	}     
    	}

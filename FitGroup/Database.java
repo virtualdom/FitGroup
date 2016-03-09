@@ -37,4 +37,11 @@ public class Database {
         }
         return null;
     }
+
+    public void addUser (User user) {
+        BufferedWriter userTextfile = new BufferedWriter(new FileWriter("users.txt"));
+        out.write(user.getUsername() + "\t" + user.getPassword() + "\t" + user.getWeight() + "\t" + user.getAge());
+        out.close();
+        users.add(user);
+    }
 }
