@@ -6,7 +6,7 @@ import java.io.*;
 import javax.swing.*;
 import java.util.*;
 
-public class SignUp {
+public class SignUpView {
 
     private JLabel messageText;
     private JFrame mainFrame;
@@ -16,7 +16,7 @@ public class SignUp {
     private JPasswordField password;
     private Database db;
 
-    public SignUp (Database db) {
+    public SignUpView (Database db) {
         this.db = db;
         prepareGUI();
     }
@@ -88,7 +88,7 @@ public class SignUp {
     private class ButtonClickListener implements ActionListener {
         public void actionPerformed (ActionEvent e) {
             String command = e.getActionCommand();
-            User loginUser, 
+            User loginUser;
             String newUsername, newPass;
             int newAge, newWeight;
             if (command.equals( "signup" ))  {
@@ -97,7 +97,7 @@ public class SignUp {
                 weight.setText(weight.getText().trim());
 
                 newUsername = username.getText();
-                newPass = new String(password.getPassword())
+                newPass = new String(password.getPassword());
 
                 loginUser = db.searchUser(username.getText());
                 if (loginUser != null) messageText.setText("Username " + username.getText() + " already exists.");
@@ -107,7 +107,7 @@ public class SignUp {
                     try {
                         newAge = Integer.parseInt(age.getText());
                         newWeight = Integer.parseInt(weight.getText());
-                    } catch (Exception e) {
+                    } catch (Exception ex) {
                         newAge = -1;
                         newWeight = -1;
                     }
@@ -117,14 +117,14 @@ public class SignUp {
                         db.addUser(new User(newUsername, newPass, newAge, newWeight));
                         loginUser = db.searchUser(newUsername);
             	        mainFrame.setVisible(false);
-                        FitGroupApp application = new FitGroupApp(loginUser, db);
+                        DashboardView application = new DashboardView(loginUser, db);
 
                     }
                 }
             }
             else {
                 mainFrame.setVisible(false);
-                Login window = new Login(db);
+                LoginView window = new LoginView(db);
            	} 
        	}     
    	}

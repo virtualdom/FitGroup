@@ -19,7 +19,7 @@ public class Database {
             userScanner = new Scanner(new File("./FitGroup/users.txt"));
         } catch (FileNotFoundException e) {
             userScanner = new Scanner(System.in);
-            System.out.println("ERROR: users.txt does not exist");
+            System.out.println("ERROR: could not open users.txt");
             System.exit(0);
         }
         while (userScanner.hasNext()) {
@@ -39,9 +39,15 @@ public class Database {
     }
 
     public void addUser (User user) {
-        BufferedWriter userTextfile = new BufferedWriter(new FileWriter("users.txt"));
-        out.write(user.getUsername() + "\t" + user.getPassword() + "\t" + user.getWeight() + "\t" + user.getAge());
-        out.close();
-        users.add(user);
+        BufferedWriter userTextfile;
+        try {
+            userTextfile = new BufferedWriter(new FileWriter("./FitGroup/users.txt", true));
+            userTextfile.write(user.getUsername() + "\t" + user.getPassword() + "\t" + user.getWeight() + "\t" + user.getAge() + "\n");
+            userTextfile.close();
+            users.add(user);
+        } catch (IOException error) {
+            System.out.println("ERROR: could not open users.txt");
+            System.exit(0);
+        }
     }
 }

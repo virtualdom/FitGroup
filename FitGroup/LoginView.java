@@ -6,7 +6,7 @@ import java.io.*;
 import javax.swing.*;
 import java.util.*;
 
-public class Login {
+public class LoginView {
 
     private JLabel messageText;
     private JFrame mainFrame;
@@ -14,7 +14,7 @@ public class Login {
     private JPasswordField password;
     private Database db;
 
-    public Login (Database db) {
+    public LoginView (Database db) {
         this.db = db;
         prepareGUI();
     }
@@ -78,13 +78,13 @@ public class Login {
                 if (loginUser == null) messageText.setText("Username does not exist.");
             	else if (loginUser.getPassword().equals(new String(password.getPassword()))) {
                     mainFrame.setVisible(false);
-                    FitGroupApp application = new FitGroupApp(loginUser, db);
+                    DashboardView application = new DashboardView(loginUser, db);
                 }
                 else messageText.setText("Username and password do not match.");
            	}
            	else {
             	mainFrame.setVisible(false);
-                SignUp signup = new SignUp(db);
+                SignUpView signup = new SignUpView(db);
            	} 
        	}     
    	}
