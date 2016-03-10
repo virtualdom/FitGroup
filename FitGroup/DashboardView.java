@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class FitGroupApp {
+public class DashboardView {
 
     private JFrame mainFrame;
     private JPanel userPanel;
@@ -15,7 +15,7 @@ public class FitGroupApp {
     private User user;
     private Database db;
 
-    public FitGroupApp (User user, Database db) {
+    public DashboardView (User user, Database db) {
         this.user = user;
         this.db = db;
         workoutCount = 0;
