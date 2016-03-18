@@ -1,5 +1,0 @@
-dominic	dompass	190	22
-chencheng	chepass	185	26
-yinghwa	yinpass	100	25
-zhiwei	zhipass	150	24
-edward	edwpass	160	26
