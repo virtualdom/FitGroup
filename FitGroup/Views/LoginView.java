@@ -1,4 +1,4 @@
-package FitGroup;
+package FitGroup.views;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -6,16 +6,18 @@ import java.io.*;
 import javax.swing.*;
 import java.util.*;
 
-public class LoginView {
+import FitGroup.models.*;
+import FitGroup.controllers.LoginController;
+
+public class LoginView extends FitGroupView {
 
     private JLabel messageText;
-    private JFrame mainFrame;
     private JTextField username;
     private JPasswordField password;
-    private Database db;
+    private LoginController controller;
 
     public LoginView (Database db) {
-        this.db = db;
+        controller = new LoginController(db, this);
         prepareGUI();
     }
 
@@ -72,19 +74,14 @@ public class LoginView {
     private class ButtonClickListener implements ActionListener {
         public void actionPerformed (ActionEvent e) {
             String command = e.getActionCommand();
-            User loginUser;
             if (command.equals( "login" ))  {
-                loginUser = db.searchUser(username.getText());
-                if (loginUser == null) messageText.setText("Username does not exist.");
-            	else if (loginUser.getPassword().equals(new String(password.getPassword()))) {
-                    mainFrame.setVisible(false);
-                    DashboardView application = new DashboardView(loginUser, db);
-                }
-                else messageText.setText("Username and password do not match.");
-           	}
+                int loginStatus = controller.logIn(username.getText(), new String(password.getPassword()));
+           	    if (loginStatus == 0 ) messageText.setText("Username does not exist.");
+                else if (loginStatus < 0) messageText.setText("Username and password do not match.");
+                else System.out.println("Successful login: " + username.getText());
+            }
            	else {
-            	mainFrame.setVisible(false);
-                SignUpView signup = new SignUpView(db);
+                controller.signUp();
            	} 
        	}     
    	}

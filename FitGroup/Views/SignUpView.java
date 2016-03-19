@@ -1,4 +1,4 @@
-package FitGroup;
+package FitGroup.views;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -6,24 +6,27 @@ import java.io.*;
 import javax.swing.*;
 import java.util.*;
 
-public class SignUpView {
+
+import FitGroup.models.*;
+import FitGroup.controllers.SignUpController;
+
+public class SignUpView extends FitGroupView {
 
     private JLabel messageText;
-    private JFrame mainFrame;
     private JTextField username;
     private JTextField age;
     private JTextField weight;
     private JPasswordField password;
-    private Database db;
+    private SignUpController controller;
 
     public SignUpView (Database db) {
-        this.db = db;
+        controller = new SignUpController(db, this);
         prepareGUI();
     }
 
     private void prepareGUI (){
         mainFrame = new JFrame("FitGroup | Social Workouts");
-        mainFrame.setSize(400,200);
+        mainFrame.setSize(400,300);
         mainFrame.setResizable(false);
         mainFrame.setLayout(new FlowLayout());
 
@@ -88,43 +91,29 @@ public class SignUpView {
     private class ButtonClickListener implements ActionListener {
         public void actionPerformed (ActionEvent e) {
             String command = e.getActionCommand();
-            User loginUser;
-            String newUsername, newPass;
-            int newAge, newWeight;
+            
             if (command.equals( "signup" ))  {
-                username.setText(username.getText().trim());
-                age.setText(age.getText().trim());
-                weight.setText(weight.getText().trim());
+                String newUsername = username.getText().trim();
+                String newPass = new String(password.getPassword());
+    
+                int newAge, newWeight;
+                try {
+                    newAge = Integer.parseInt(age.getText().trim());
+                    newWeight = Integer.parseInt(weight.getText().trim());
+                } catch (Exception ex) {
+                    newAge = -1;
+                    newWeight = -1;
+                }
 
-                newUsername = username.getText();
-                newPass = new String(password.getPassword());
-
-                loginUser = db.searchUser(username.getText());
-                if (loginUser != null) messageText.setText("Username " + username.getText() + " already exists.");
-            	else if (newUsername.equals("") || newPass.equals("") || age.getText().equals("") || weight.getText().equals(""))
-                    messageText.setText("Not all fields are filled.");
+                if (newUsername.equals("") || newPass.equals("") || newAge < 0 || newWeight < 0)
+                    messageText.setText("Please fill all fields correctly.");
                 else {
-                    try {
-                        newAge = Integer.parseInt(age.getText());
-                        newWeight = Integer.parseInt(weight.getText());
-                    } catch (Exception ex) {
-                        newAge = -1;
-                        newWeight = -1;
-                    }
-
-                    if (newAge < 1 || newWeight < 1) messageText.setText("Age and weight must be valid integers.");
-                    else {
-                        db.addUser(new User(newUsername, newPass, newAge, newWeight));
-                        loginUser = db.searchUser(newUsername);
-            	        mainFrame.setVisible(false);
-                        DashboardView application = new DashboardView(loginUser, db);
-
-                    }
+                    int status = controller.signUp(newUsername, newPass, newAge, newWeight);
+                    if (status == 0) messageText.setText("User " + newUsername + " already exists. Please try another username.");
                 }
             }
             else {
-                mainFrame.setVisible(false);
-                LoginView window = new LoginView(db);
+                controller.cancel();
            	} 
        	}     
    	}
