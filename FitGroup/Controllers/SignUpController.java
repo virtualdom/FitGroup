@@ -19,7 +19,7 @@ public class SignUpController {
         if (user != null) return 0;
         else {
             db.addUser(new User(username, password, age, weight));
-            user = db.searchUser(username);
+           // user = db.searchUser(username);
             view.getFrame().setVisible(false);
             DashboardView dashboardWindow = new DashboardView(user, db);
             return 1;

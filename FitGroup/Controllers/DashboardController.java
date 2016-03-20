@@ -33,15 +33,15 @@ public class DashboardController {
     }
 
     public void joinGroup () {
-    	JoinView joinWindow = JoinView.createWindow();
+    	JoinView joinWindow = JoinView.createWindow(db,loggedInUser);
     }
 
     public void createGroup () {
-    	CreateView createWindow = CreateView.createWindow();
+    	CreateView createWindow = CreateView.createWindow(db);
     }
 
     public String[] getGroupNames () {
-        ArrayList<Group> groups = db.getGroups();
+        ArrayList<Group> groups = db.searchGroupsByUser(loggedInUser.getUsername());
         String[] groupNames = new String[groups.size()];
         for (int i = 0; i < groups.size(); i++) {
             groupNames[i] = groups.get(i).getname(); 
