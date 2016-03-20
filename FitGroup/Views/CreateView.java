@@ -9,6 +9,7 @@ import FitGroup.controllers.CreateController;
 import FitGroup.controllers.LoginController;
 import FitGroup.controllers.SignUpController;
 import FitGroup.models.Database;
+import FitGroup.models.User;
 
 import java.util.*;
 
@@ -20,8 +21,8 @@ public class CreateView {
     private static CreateView instance;
     private CreateController controller;
 
-    private CreateView (Database db) {
-        controller = new CreateController(db, this);
+    private CreateView (Database db,User loggedInUser) {
+        controller = new CreateController(db, this,loggedInUser);
         prepareGUI();
     }
 
@@ -29,10 +30,10 @@ public class CreateView {
         return mainFrame;
     }
 
-    public static CreateView createWindow (Database db) {
+    public static CreateView createWindow (Database db,User loggedInUser) {
         if (!instantiated) {
             instantiated = true;
-            instance = new CreateView(db);
+            instance = new CreateView(db,loggedInUser);
         }
         return instance;
     }
