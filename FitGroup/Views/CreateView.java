@@ -4,6 +4,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
+
+import FitGroup.controllers.CreateController;
+import FitGroup.controllers.LoginController;
+import FitGroup.controllers.SignUpController;
+import FitGroup.models.Database;
+
 import java.util.*;
 
 public class CreateView {
@@ -12,19 +18,25 @@ public class CreateView {
     private JLabel messageText;
     private static boolean instantiated = false;
     private static CreateView instance;
+    private CreateController controller;
 
-    private CreateView () {
+    private CreateView (Database db) {
+        controller = new CreateController(db, this);
         prepareGUI();
     }
 
-    public static CreateView createWindow () {
+    public JFrame getFrame () {
+        return mainFrame;
+    }
+
+    public static CreateView createWindow (Database db) {
         if (!instantiated) {
             instantiated = true;
-            instance = new CreateView();
+            instance = new CreateView(db);
         }
         return instance;
     }
-
+    
     private void prepareGUI (){
         mainFrame = new JFrame("FitGroup | Social Workouts");
         mainFrame.setSize(400,150);
@@ -68,7 +80,9 @@ public class CreateView {
         public void actionPerformed (ActionEvent e) {
             String command = e.getActionCommand();
             if (command.equals( "create" ))  {
-                messageText.setText("CREATE BUTTON PRESSED");
+                  //messageText.setText("CREATE BUTTON PRESSED"+groupName.getText());
+                  controller.CreateGroup(groupName.getText().trim());
+                
             } else {
                 mainFrame.setVisible(false);
                 instance = null;
