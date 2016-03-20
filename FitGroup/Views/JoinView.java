@@ -3,6 +3,12 @@ package FitGroup.views;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import FitGroup.controllers.CreateController;
+import FitGroup.controllers.JoinController;
+import FitGroup.models.Database;
+import FitGroup.models.User;
+
 import java.util.Scanner; 
 import java.io.*;
 
@@ -16,14 +22,16 @@ public class JoinView extends FitGroupView implements ActionListener {
 	private JTextField textField;
 	private static boolean instantiated = false;
 	private static JoinView instance;
+	private JoinController controller;
 
-	private JoinView() {
-		prepareGUI();
-	}
+    private JoinView (Database db,User loggedInUser) {
+        controller = new JoinController(db, this,loggedInUser);
+        prepareGUI();
+    }
 
-	public static JoinView createWindow () {
+	public static JoinView createWindow (Database db, User loggedInUser) {
 		if (!instantiated) {
-			instance = new JoinView();
+			instance = new JoinView(db,loggedInUser);
 			instantiated = true;
 		}
 
@@ -58,7 +66,7 @@ public class JoinView extends FitGroupView implements ActionListener {
 		passwordField.setBounds(125,100,205,20);
 		contentPane.add(passwordField);
 		
-		lblGroupCode = new JLabel(" Group Code  : ");
+		lblGroupCode = new JLabel(" Invitation Code  : ");
 		lblGroupCode.setBounds(30,100,100,20);
 		contentPane.add(lblGroupCode);
 		
@@ -88,6 +96,9 @@ public class JoinView extends FitGroupView implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("Implement controller");
+		//controller.JoinGroup()
+		String username = textField.getText();
+		String IC = new String(passwordField.getPassword());
+		controller.JoinGroup(username, IC);
 	}
 }
