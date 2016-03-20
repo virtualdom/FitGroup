@@ -5,10 +5,10 @@ import java.util.Date;
 public class Group {
 	    //private int ID;
 	    private String name;
-	    private Date createDate;
+	    private String createDate;
 	    private String IC;
 	    
-	    public Group (String name, Date createDate, String IC){
+	    public Group (String name, String createDate, String IC){
 	        this.name = name;
 	        this.createDate = createDate;
 	        this.IC = IC;
@@ -18,7 +18,7 @@ public class Group {
 	        return name;
 	    }
 
-	    public Date getCreateDate () {
+	    public String getCreateDate () {
 	        return createDate;
 	    }
 

@@ -69,5 +69,5 @@ public class CreateController {
 	            buf.append(str.charAt(num));
 	        }
 	        IC = buf.toString();  
-	    }   
+	    }
 }

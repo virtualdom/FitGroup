@@ -18,7 +18,7 @@ public class DashboardView extends FitGroupView {
 
     public DashboardView (User user, Database db) {
 
-        this.controller = new DashboardController(user, db);
+        this.controller = new DashboardController(user, db, this);
         prepareGUI();
     }
 
@@ -123,6 +123,14 @@ public class DashboardView extends FitGroupView {
         mainFrame.add(actionPanel);
         mainFrame.add(groupView);
         mainFrame.setVisible(true);  
+    }
+
+    public void updateCombobox () {
+        comboBox.removeAllItems();
+        String[] groupnameArray = controller.getGroupNames();
+        for (int i = 0; i < groupnameArray.length; i++) {
+            comboBox.addItem(groupnameArray[i]); 
+        }
     }
 
     private class ButtonClickListener implements ActionListener {

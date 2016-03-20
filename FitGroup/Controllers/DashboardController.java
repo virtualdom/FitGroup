@@ -11,10 +11,12 @@ import FitGroup.views.JoinView;
 public class DashboardController {
     private User loggedInUser;
     private Database db;
+    private DashboardView view;
 
-    public DashboardController (User user, Database database) {
+    public DashboardController (User user, Database database, DashboardView view) {
     	this.loggedInUser = user;
     	this.db = database;
+        this.view = view;
     }
 
     public User getLoggedInUser () {
@@ -33,11 +35,11 @@ public class DashboardController {
     }
 
     public void joinGroup () {
-    	JoinView joinWindow = JoinView.createWindow(db,loggedInUser);
+    	JoinView joinWindow = JoinView.createWindow(db,loggedInUser, view);
     }
 
     public void createGroup () {
-    	CreateView createWindow = CreateView.createWindow(db);
+    	CreateView createWindow = CreateView.createWindow(db,loggedInUser, view);
     }
 
     public String[] getGroupNames () {
