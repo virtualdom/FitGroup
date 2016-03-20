@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 import FitGroup.models.Database;
 import FitGroup.models.Group;
+import FitGroup.models.Membership;
 import FitGroup.models.User;
 import FitGroup.views.DashboardView;
 import FitGroup.views.LoginView;
@@ -18,12 +19,14 @@ public class CreateController {
 	
 	    private Database db;
 	    private CreateView view;
+	    private User loggedInUser;
 	    private String IC,creatdate;
 	    
 
-	    public CreateController (Database database, CreateView view) {
+	    public CreateController (Database database, CreateView view, User loggedInUser) {
 	    	this.db = database;
 	        this.view = view;
+	        this.loggedInUser = loggedInUser;
 	    }
 
 	    public void CreateGroup(String groupname) {
@@ -32,15 +35,16 @@ public class CreateController {
 	        	//DashboardView dashboardWindow = new DashboardView(user, db);
 	        	GetCurrentDate();
 	            GenerateIC(6);
+	            
 	            boolean result = db.addGroup(new Group(groupname,creatdate,IC));
-	            
-	            if (result == true)
+		        Group newgroup = db.searchGroup(groupname);
+	            if (result == true)    {
 	            	JOptionPane.showMessageDialog(null, "Successfully Create Group Invitiation Code is:"+IC, "InfoBox: " , JOptionPane.INFORMATION_MESSAGE);
-	            
+	            	db.addMembership(new Membership(loggedInUser,newgroup,1));
+	            	}
 	            //view.getFrame().setVisible(false);
 	            }
 	        else {
-	        	
 	        	JOptionPane.showMessageDialog(null, "Group exists in system", "InfoBox: " , JOptionPane.INFORMATION_MESSAGE);
 	        }
 	        
@@ -65,8 +69,5 @@ public class CreateController {
 	            buf.append(str.charAt(num));
 	        }
 	        IC = buf.toString();  
-	    }
-	    
-	    
-	    
+	    }   
 }

@@ -37,7 +37,7 @@ public class DashboardController {
     }
 
     public void createGroup () {
-    	CreateView createWindow = CreateView.createWindow(db);
+    	CreateView createWindow = CreateView.createWindow(db,loggedInUser);
     }
 
     public String[] getGroupNames () {
