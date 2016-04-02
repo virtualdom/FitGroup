@@ -3,4 +3,5 @@ chencheng	chepass	185	26	100
 yinghwa	yinpass	100	25	100
 zhiwei	zhipass	150	24	100
 edward	edwpass	160	26	100
-1	1	160	26	123
+1	1	26	160	139
+dom	dom	22	200	12

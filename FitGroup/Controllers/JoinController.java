@@ -28,7 +28,7 @@ public class JoinController {
         this.loggedInUser = user;
     }
 
-    public void JoinGroup(String groupname,String IC) {
+    public boolean JoinGroup(String groupname,String IC) {
     	ArrayList<User> users = db.searchUsersByGroup(groupname);
         
     	  for (int i = 0; i < users.size(); i++) {
@@ -41,11 +41,15 @@ public class JoinController {
           
           if (group.getIC().equals(IC)){
 	        boolean result = db.addMembership(new Membership(loggedInUser,group,1));
-	        if (result == true)
+	        if (result == true) {
 	        	JOptionPane.showMessageDialog(null, "Successfully Join Group", "InfoBox: " , JOptionPane.INFORMATION_MESSAGE);
+                return true;
+            }
+            return false;
           }
           else{
         	JOptionPane.showMessageDialog(null, "IC is not right ", "InfoBox: " , JOptionPane.INFORMATION_MESSAGE);
+            return false;
           }
     }
     

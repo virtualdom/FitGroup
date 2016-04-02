@@ -114,7 +114,7 @@ public class SignUpView extends FitGroupView {
             }
             else {
                 controller.cancel();
-           	} 
-       	}     
-   	}
+            } 
+        }     
+    }
 }

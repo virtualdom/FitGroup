@@ -63,17 +63,8 @@ public class Database {
             groupname = groupScanner.next();
             createdate = groupScanner.next();
             IC = groupScanner.next();
-            DateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
-            Date date = null;
-
-            try {
-                date = formatter.parse(createdate);
-            } catch (ParseException e) {
-                System.out.println("ERROR: group.txt experienced a parsing error");
-                System.exit(0);
-            }
-                
-            groups.add(new Group(groupname, date, IC));
+                          
+            groups.add(new Group(groupname, createdate, IC));
         }
         groupScanner.close();
     }
@@ -189,6 +180,39 @@ public class Database {
         }
     }
 
+    
+    public boolean addGroup (Group group) {
+        BufferedWriter userTextfile;
+        try {
+            userTextfile = new BufferedWriter(new FileWriter("./FitGroup/Models/groups.txt", true));
+            userTextfile.write(group.getname() + "\t" + group.getCreateDate() + "\t" + group.getIC()+ "\n");
+            userTextfile.close();
+            boolean result = groups.add(group);
+            return result;
+            
+        } catch (IOException error) {
+            System.out.println("ERROR: could not open groups.txt");
+            return false;
+        }
+    }
+ 
+
+    public boolean addMembership (Membership membership) {
+        BufferedWriter userTextfile;
+        try {
+            userTextfile = new BufferedWriter(new FileWriter("./FitGroup/Models/memberships.txt", true));
+            userTextfile.write(membership.getGroup().getname() + "\t" + membership.getUser().getUsername() + "\t" + membership.getIsAdmin()+ "\n");
+            userTextfile.close();
+            boolean result = memberships.add(membership);
+            return result;
+            
+        } catch (IOException error) {
+            System.out.println("ERROR: could not open groups.txt");
+            return false;
+        }
+    }
+
+    
     public ArrayList<User> searchUsersByGroup (String groupname) {
         ArrayList<User> tmpusers = new ArrayList<User>(0);
         for (int i = 0; i < memberships.size(); i++) {
@@ -199,4 +223,18 @@ public class Database {
         }
         return tmpusers;
     }
+    
+    public ArrayList<Group> searchGroupsByUser (String username) {
+        ArrayList<Group> tmpgroups = new ArrayList<Group>(0);
+        for (int i = 0; i < memberships.size(); i++) {
+            if (memberships.get(i).getUser().getUsername().equals(username))
+            {
+                tmpgroups.add(memberships.get(i).getGroup());
+            }             
+        }
+        return tmpgroups;
+    }
+    
+    
+    
 }

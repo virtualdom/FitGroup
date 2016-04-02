@@ -76,13 +76,13 @@ public class LoginView extends FitGroupView {
             String command = e.getActionCommand();
             if (command.equals( "login" ))  {
                 int loginStatus = controller.logIn(username.getText(), new String(password.getPassword()));
-           	    if (loginStatus == 0 ) messageText.setText("Username does not exist.");
+                if (loginStatus == 0 ) messageText.setText("Username does not exist.");
                 else if (loginStatus < 0) messageText.setText("Username and password do not match.");
                 else System.out.println("Successful login: " + username.getText());
             }
-           	else {
+            else {
                 controller.signUp();
-           	} 
-       	}     
-   	}
+            } 
+        }     
+    }
 }

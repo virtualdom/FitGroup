@@ -1,6 +1,5 @@
 # Linux
-$ find -name "*.java" > sources.txt
-$ javac @sources.txt
+$ javac ./*java FitGroup/Controllers/*.java FitGroup/Views/*.java FitGroup/Models/*.java
 
 :: Windows
 > dir /s /B *.java > sources.txt
