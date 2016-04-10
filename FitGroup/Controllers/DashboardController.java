@@ -2,11 +2,13 @@ package FitGroup.controllers;
 
 import java.awt.event.*;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 import FitGroup.models.*;
 import FitGroup.views.CreateView;
 import FitGroup.views.DashboardView;
 import FitGroup.views.JoinView;
+import FitGroup.views.ApproveRequestsView;
 
 public class DashboardController {
     private User loggedInUser;
@@ -32,6 +34,14 @@ public class DashboardController {
     	loggedInUser.setScore(newScore);
         db.updateUser(loggedInUser);
     	return newScore;
+    }
+
+    public void approveRequests (String groupName) {
+        if (db.searchMembership(groupName, loggedInUser.getUsername()).getIsAdmin() == 0) {
+            JOptionPane.showMessageDialog(null, "You are not an admin for this group.", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        ApproveRequestsView approveRequestsView = ApproveRequestsView.createWindow(db, loggedInUser, view);
     }
 
     public void joinGroup () {

@@ -23,7 +23,7 @@ public class Database {
     }
 
     private void importUsers () {
-        users = new ArrayList<User>(5);
+        users = new ArrayList<User>(0);
         int age, weight, score;
         String username, password;
         Scanner userScanner;    
@@ -49,7 +49,7 @@ public class Database {
     }
 
     private void importGroups () {
-        groups = new ArrayList<Group>(3);
+        groups = new ArrayList<Group>(0);
         String groupname, IC, createdate;
         Scanner groupScanner;
 
@@ -72,7 +72,7 @@ public class Database {
     }
 
     private void importMemberships () {
-        memberships = new ArrayList<Membership>(3);
+        memberships = new ArrayList<Membership>(0);
         String memberGroup;
         String memberUser;
         int isadmin;
@@ -98,7 +98,7 @@ public class Database {
     }
 
     private void importRequests () {
-        requests = new ArrayList<Request>(2);
+        requests = new ArrayList<Request>(0);
         String requestGroup;
         String requestUser;
         Scanner requestScanner;
@@ -111,8 +111,8 @@ public class Database {
             System.exit(0);
         }
         while (requestScanner.hasNext()) {
-            requestGroup = requestScanner.next();
             requestUser = requestScanner.next();
+            requestGroup = requestScanner.next();
             User tmpuser = searchUser(requestUser);
             Group tmpgroup = searchGroup(requestGroup);
 
@@ -153,57 +153,57 @@ public class Database {
     }
 
     public void updateUser (User user) {
-        for (int i = 0; i < users.size(); i++) {
+        Scanner userReader = null;    
+        BufferedWriter userWriter = null;
+        File file = null;
+        String username, line;
+        
+        try {
+            file = new File("./FitGroup/Models/users.txt");
+            userReader = new Scanner(file);
+            userWriter = new BufferedWriter(new FileWriter("./FitGroup/Models/users2.txt", true));
+        } catch (Exception e) {
+            System.out.println("ERROR: could not open users.txt for update user");
+            System.exit(0);
+        }
+        
+        for (int i = 0; i < users.size(); i++)
             if (users.get(i).getUsername().equals(user.getUsername())) {
                 users.set(i, user);
                 break;
             }
 
-            Scanner userReader = null;    
-            BufferedWriter userWriter = null;
-            File file = null;
+        while (userReader.hasNext()) {
+            username = userReader.next();
             try {
-                file = new File("./FitGroup/Models/users.txt");
-                userReader = new Scanner(file);
-                userWriter = new BufferedWriter(new FileWriter("./FitGroup/Models/users2.txt", true));
-            } catch (Exception e) {
-                System.out.println("ERROR: could not open users.txt for update user");
-                System.exit(0);
-            }
-
-            String username, line;
-            while (userReader.hasNext()) {
-                username = userReader.next();
-                try {
-                    if (username.equals(user.getUsername())) {
-                        userWriter.write(user.getUsername() + "\t" + user.getPassword() + "\t" + user.getWeight() + "\t" + user.getAge() + "\t" + user.getScore() + "\n");
-                        username = userReader.nextLine();
-                    }
-                    else
-                        userWriter.write(username + userReader.nextLine() + "\n");
-                } catch (IOException e) {
-                    System.out.println("ERROR: could not finish updating users.txt for update user");
-                    System.exit(0);
+                if (username.equals(user.getUsername())) {
+                    userWriter.write(user.getUsername() + "\t" + user.getPassword() + "\t" + user.getWeight() + "\t" + user.getAge() + "\t" + user.getScore() + "\n");
+                    username = userReader.nextLine();
                 }
-            }
-
-            try {
-                userReader.close();
-                userWriter.close();
+                else
+                    userWriter.write(username + userReader.nextLine() + "\n");
             } catch (IOException e) {
-                System.out.println("ERROR: could not close files for update user");
+                System.out.println("ERROR: could not finish updating users.txt for update user");
                 System.exit(0);
             }
-
-            file.delete();
-// try {
-            file = new File("./FitGroup/Models/users2.txt");
-// } catch (FileNotFoundException e) {
-//     System.out.println("ERROR: could not rename users2.txt");
-//     System.exit(0);
-// }
-            file.renameTo(new File("./FitGroup/Models/users.txt"));
         }
+
+        try {
+            userReader.close();
+            userWriter.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: could not close files for update user");
+            System.exit(0);
+        }
+
+        file.delete();
+    // try {
+        file = new File("./FitGroup/Models/users2.txt");
+    // } catch (FileNotFoundException e) {
+    //     System.out.println("ERROR: could not rename users2.txt");
+    //     System.exit(0);
+    // }
+        file.renameTo(new File("./FitGroup/Models/users.txt"));
     }
 
 
@@ -250,7 +250,45 @@ public class Database {
             System.out.println("ERROR: could not open requirements.txt");
             return false;
         }
+    }
 
+    public ArrayList<Request> searchRequestsByGroup (String groupName) {
+        ArrayList<Request> tempreq = new ArrayList<Request>(0);
+        for (int i = 0; i < requests.size(); i++) {
+            if (requests.get(i).getGroup().getname().equals(groupName))
+                tempreq.add(requests.get(i));
+        }
+        return tempreq;
+    }
+
+    public Membership searchMembership (String groupname, String username) {
+        for (int i = 0; i < memberships.size(); i++) {
+            if (memberships.get(i).getGroup().getname().equals(groupname) && memberships.get(i).getUser().getUsername().equals(username))
+                return memberships.get(i);
+        }
+        return null;
+    }
+
+    public ArrayList<Membership> searchMembershipsByUser (String username) {
+        ArrayList<Membership> tempmem = new ArrayList<Membership>(0);
+        for (int i = 0; i < memberships.size(); i++) {
+            if (memberships.get(i).getUser().getUsername().equals(username))
+            {
+                tempmem.add(memberships.get(i));
+            }             
+        }
+        return tempmem;
+    }
+
+    public ArrayList<Membership> searchMembershipsByGroup (String groupname) {
+        ArrayList<Membership> tempmem = new ArrayList<Membership>(0);
+        for (int i = 0; i < memberships.size(); i++) {
+            if (memberships.get(i).getGroup().getname().equals(groupname))
+            {
+                tempmem.add(memberships.get(i));
+            }             
+        }
+        return tempmem;
     }
 
 
@@ -276,6 +314,47 @@ public class Database {
         return tmpgroups;
     }
 
+    public void deleteRequest (Request request) {
+        Scanner requestReader = null;    
+        BufferedWriter requestWriter = null;
+        File file = null;
+        
+        try {
+            file = new File("./FitGroup/Models/requests.txt");
+            requestReader = new Scanner(file);
+            requestWriter = new BufferedWriter(new FileWriter("./FitGroup/Models/requests2.txt", true));
+        } catch (Exception e) {
+            System.out.println("ERROR: could not open requests.txt for delete requests");
+            System.exit(0);
+        }
+        
+        for (int i = 0; i < requests.size(); i++)
+            if (requests.get(i).getUser().getUsername().equals(request.getUser().getUsername()) && requests.get(i).getGroup().getname().equals(request.getGroup().getname()))
+                requests.remove(i);
 
+        String username, groupname;
+        while (requestReader.hasNext()) {
+            username = requestReader.next();
+            groupname = requestReader.next();
+            try {
+                if (!username.equals(request.getUser().getUsername()) || !groupname.equals(request.getGroup().getname()))
+                    requestWriter.write(username + "\t" + groupname + "\n");
+            } catch (IOException e) {
+                System.out.println("ERROR: could not finish updating requests.txt for update user");
+                System.exit(0);
+            }
+        }
 
+        try {
+            requestReader.close();
+            requestWriter.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: could not close files for update request");
+            System.exit(0);
+        }
+
+        file.delete();
+        file = new File("./FitGroup/Models/requests2.txt");
+        file.renameTo(new File("./FitGroup/Models/requests.txt"));
+    }
 }

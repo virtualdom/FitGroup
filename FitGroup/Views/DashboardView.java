@@ -74,7 +74,10 @@ public class DashboardView extends FitGroupView {
         
         JButton actionButton = new JButton("Query");
         actionButton.addActionListener(new ButtonClickListener());
-        actionButton.setActionCommand("Query");
+        actionButton.setActionCommand("Query");        
+        JButton approveButton = new JButton("Approve Requests");
+        approveButton.addActionListener(new ButtonClickListener());
+        approveButton.setActionCommand("Approve Requests");
         
         JPanel toppanel = new JPanel(); 
         toppanel.setLayout(new BoxLayout(toppanel, BoxLayout.Y_AXIS )); 
@@ -84,6 +87,7 @@ public class DashboardView extends FitGroupView {
         
         buttonPanel.add(Box.createHorizontalGlue ()); 
         buttonPanel.add(actionButton); 
+        buttonPanel.add(approveButton); 
         toppanel.add(Box.createVerticalStrut (10)); 
         toppanel.add(buttonPanel); 
         toppanel.add(Box.createVerticalStrut (10));
@@ -142,6 +146,9 @@ public class DashboardView extends FitGroupView {
             }
             else if (command.equals("Join Group")) {
                 controller.joinGroup();
+            } 
+            else if (command.equals("Approve Requests")) {
+                controller.approveRequests(comboBox.getSelectedItem().toString());
             } 
             else if (command.equals("Create Group")) {
                 controller.createGroup();

@@ -9,7 +9,6 @@ public class Request {
     public Request (User user, Group group) {
         this.user = user;
         this.group = group;
-
     }   
 
     public User getUser() {
