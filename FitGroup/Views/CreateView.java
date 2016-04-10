@@ -87,6 +87,8 @@ public class CreateView {
                   //messageText.setText("CREATE BUTTON PRESSED"+groupName.getText());
                 controller.CreateGroup(groupName.getText().trim());
                 mainFrame.setVisible(false);
+                instance = null;
+                instantiated = false;
                 dashboard.updateCombobox();
                 
             } else {

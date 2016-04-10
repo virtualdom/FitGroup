@@ -79,8 +79,11 @@ public class DashboardView extends FitGroupView {
         actionButton.addActionListener(new ButtonClickListener());
         actionButton.setActionCommand("Query");
         JButton approveButton = new JButton("Approve Requests");
+        JButton changeICButton = new JButton("Change Group IC");
         approveButton.addActionListener(new ButtonClickListener());
+        changeICButton.addActionListener(new ButtonClickListener());
         approveButton.setActionCommand("Approve Requests");
+        changeICButton.setActionCommand("Change IC");
         JButton makeAdminButton = new JButton("Make Admin");
         makeAdminButton.addActionListener(new ButtonClickListener());
         makeAdminButton.setActionCommand("Make Admin");
@@ -89,14 +92,18 @@ public class DashboardView extends FitGroupView {
         toppanel.setLayout(new BoxLayout(toppanel, BoxLayout.Y_AXIS )); 
         JPanel buttonPanel = new JPanel(); 
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS )); 
+        JPanel bottomButtonPanel = new JPanel(); 
+        bottomButtonPanel.setLayout(new BoxLayout(bottomButtonPanel, BoxLayout.X_AXIS )); 
         buttonPanel.add(comboBox); 
         
         buttonPanel.add(Box.createHorizontalGlue ()); 
         buttonPanel.add(actionButton); 
         buttonPanel.add(makeAdminButton); 
         buttonPanel.add(approveButton); 
+        bottomButtonPanel.add(changeICButton); 
         toppanel.add(Box.createVerticalStrut (10)); 
         toppanel.add(buttonPanel); 
+        toppanel.add(bottomButtonPanel); 
         toppanel.add(Box.createVerticalStrut (10));
         
         JPanel bottompanel = new JPanel(); 
@@ -165,6 +172,9 @@ public class DashboardView extends FitGroupView {
             }
             else if (command.equals("Create Group")) {
                 controller.createGroup();
+            } 
+            else if (command.equals("Change IC")) {
+                controller.changeIC(comboBox.getSelectedItem().toString());
             } 
             else {                
                 for(int i = defaulttable.getRowCount() - 1; i >=0; i--) {

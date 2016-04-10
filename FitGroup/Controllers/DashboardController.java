@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import FitGroup.models.*;
 import FitGroup.views.CreateView;
+import FitGroup.views.ChangeICView;
 import FitGroup.views.DashboardView;
 import FitGroup.views.JoinView;
 import FitGroup.views.ApproveRequestsView;
@@ -65,7 +66,11 @@ public class DashboardController {
     }
 
     public void joinGroup () {
-    	JoinView joinWindow = JoinView.createWindow(db,loggedInUser, view);
+        JoinView joinWindow = JoinView.createWindow(db,loggedInUser, view);
+    }
+
+    public void changeIC (String groupname) {
+    	ChangeICView changeICView = ChangeICView.createWindow(db, db.searchGroup(groupname), view);
     }
 
     public void createGroup () {

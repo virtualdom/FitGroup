@@ -206,6 +206,60 @@ public class Database {
         file.renameTo(new File("./FitGroup/Models/users.txt"));
     }
 
+    public void updateGroup (Group group) {
+        Scanner groupReader = null;    
+        BufferedWriter groupWriter = null;
+        File file = null;
+        String groupname, date, ic;
+        
+        try {
+            file = new File("./FitGroup/Models/groups.txt");
+            groupReader = new Scanner(file);
+            groupWriter = new BufferedWriter(new FileWriter("./FitGroup/Models/groups2.txt", true));
+        } catch (Exception e) {
+            System.out.println("ERROR: could not open groups.txt for update group");
+            System.exit(0);
+        }
+        
+        for (int i = 0; i < groups.size(); i++)
+            if (groups.get(i).getname().equals(group.getname())) {
+                groups.set(i, group);
+                break;
+            }
+
+        while (groupReader.hasNext()) {
+            groupname = groupReader.next();
+            date = groupReader.next();
+            ic = groupReader.next();
+            try {
+                if (groupname.equals(group.getname()))
+                    groupWriter.write(group.getname() + "\t" + group.getCreateDate() + "\t" + group.getIC() + "\n");
+                else
+                    groupWriter.write(groupname + "\t" + date + "\t" + ic + "\n");
+            } catch (IOException e) {
+                System.out.println("ERROR: could not finish updating groups.txt for update group");
+                System.exit(0);
+            }
+        }
+
+        try {
+            groupReader.close();
+            groupWriter.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: could not close files for update group");
+            System.exit(0);
+        }
+
+        file.delete();
+    // try {
+        file = new File("./FitGroup/Models/groups2.txt");
+    // } catch (FileNotFoundException e) {
+    //     System.out.println("ERROR: could not rename users2.txt");
+    //     System.exit(0);
+    // }
+        file.renameTo(new File("./FitGroup/Models/groups.txt"));
+    }
+
     public void updateMembership (Membership membership) {
         Scanner membershipReader = null;    
         BufferedWriter membershipWriter = null;
