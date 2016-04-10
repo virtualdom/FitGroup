@@ -13,11 +13,13 @@ public class Database {
     private ArrayList<User> users;
     private ArrayList<Group> groups;
     private ArrayList<Membership> memberships;
+    private ArrayList<Request> requests;
 
     public Database () {
         importUsers();
         importGroups();
         importMemberships();
+        importRequests ();
     }
 
     private void importUsers () {
@@ -25,7 +27,7 @@ public class Database {
         int age, weight, score;
         String username, password;
         Scanner userScanner;    
-        
+
         try {
             userScanner = new Scanner(new File("./FitGroup/Models/users.txt"));
         } catch (FileNotFoundException e) {
@@ -42,7 +44,7 @@ public class Database {
             score = userScanner.nextInt();
             users.add(new User(username, password, age, weight, score));
         }
-        
+
         userScanner.close();
     }
 
@@ -50,7 +52,7 @@ public class Database {
         groups = new ArrayList<Group>(3);
         String groupname, IC, createdate;
         Scanner groupScanner;
-        
+
         try {
             groupScanner = new Scanner(new File("./FitGroup/Models/groups.txt"));
         } catch (FileNotFoundException e) {
@@ -63,7 +65,7 @@ public class Database {
             groupname = groupScanner.next();
             createdate = groupScanner.next();
             IC = groupScanner.next();
-                          
+
             groups.add(new Group(groupname, createdate, IC));
         }
         groupScanner.close();
@@ -89,10 +91,34 @@ public class Database {
             isadmin = memberScanner.nextInt();
             User tmpuser = searchUser(memberUser);
             Group tmpgroup = searchGroup(memberGroup);
-            
+
             memberships.add(new Membership(tmpuser, tmpgroup, isadmin));
         }
         memberScanner.close();
+    }
+
+    private void importRequests () {
+        requests = new ArrayList<Request>(2);
+        String requestGroup;
+        String requestUser;
+        Scanner requestScanner;
+
+        try {
+            requestScanner = new Scanner(new File("./FitGroup/Models/requests.txt"));
+        } catch (FileNotFoundException e) {
+            requestScanner = new Scanner(System.in);
+            System.out.println("ERROR: could not open requests.txt");
+            System.exit(0);
+        }
+        while (requestScanner.hasNext()) {
+            requestGroup = requestScanner.next();
+            requestUser = requestScanner.next();
+            User tmpuser = searchUser(requestUser);
+            Group tmpgroup = searchGroup(requestGroup);
+
+            requests.add(new Request(tmpuser, tmpgroup ));
+        }
+        requestScanner.close();
     }
 
     public User searchUser (String username) {
@@ -170,17 +196,17 @@ public class Database {
             }
 
             file.delete();
-            // try {
+// try {
             file = new File("./FitGroup/Models/users2.txt");
-            // } catch (FileNotFoundException e) {
-            //     System.out.println("ERROR: could not rename users2.txt");
-            //     System.exit(0);
-            // }
+// } catch (FileNotFoundException e) {
+//     System.out.println("ERROR: could not rename users2.txt");
+//     System.exit(0);
+// }
             file.renameTo(new File("./FitGroup/Models/users.txt"));
         }
     }
 
-    
+
     public boolean addGroup (Group group) {
         BufferedWriter userTextfile;
         try {
@@ -189,13 +215,13 @@ public class Database {
             userTextfile.close();
             boolean result = groups.add(group);
             return result;
-            
+
         } catch (IOException error) {
             System.out.println("ERROR: could not open groups.txt");
             return false;
         }
     }
- 
+
 
     public boolean addMembership (Membership membership) {
         BufferedWriter userTextfile;
@@ -205,14 +231,29 @@ public class Database {
             userTextfile.close();
             boolean result = memberships.add(membership);
             return result;
-            
+
         } catch (IOException error) {
             System.out.println("ERROR: could not open groups.txt");
             return false;
         }
     }
 
-    
+    public boolean addRequest(Request request){
+        BufferedWriter userTextfile;
+        try {
+            userTextfile = new BufferedWriter(new FileWriter("./FitGroup/Models/requests.txt", true));
+            userTextfile.write(request.getUser().getUsername() + "\t" + request.getGroup().getname() +  "\n");
+            userTextfile.close();
+            boolean result = requests.add(request);
+            return result;
+        } catch (IOException error) {
+            System.out.println("ERROR: could not open requirements.txt");
+            return false;
+        }
+
+    }
+
+
     public ArrayList<User> searchUsersByGroup (String groupname) {
         ArrayList<User> tmpusers = new ArrayList<User>(0);
         for (int i = 0; i < memberships.size(); i++) {
@@ -223,7 +264,7 @@ public class Database {
         }
         return tmpusers;
     }
-    
+
     public ArrayList<Group> searchGroupsByUser (String username) {
         ArrayList<Group> tmpgroups = new ArrayList<Group>(0);
         for (int i = 0; i < memberships.size(); i++) {
@@ -234,7 +275,7 @@ public class Database {
         }
         return tmpgroups;
     }
-    
-    
-    
+
+
+
 }
