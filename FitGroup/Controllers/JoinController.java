@@ -28,31 +28,35 @@ public class JoinController {
         this.loggedInUser = user;
     }
 
-    public void JoinGroup(String groupname,String IC) {
+    public boolean JoinGroup(String groupname,String IC) {
         ArrayList<User> users = db.searchUsersByGroup(groupname);
 
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getUsername().equals(loggedInUser.getUsername()))  {
                 JOptionPane.showMessageDialog(null, "User already in this group", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
-                System.exit(0);
+                return false;
             }
         }
         group = db.searchGroup(groupname); 
 
         if(IC.isEmpty()){
             boolean result = db.addRequest(new Request(loggedInUser,group));
-            if (result == true)
+            if (result == true){
                 JOptionPane.showMessageDialog(null, "Successfully Create Request to Admin", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
+                return true;
+            }
         }
         else if (group.getIC().equals(IC)){
-            boolean result = db.addMembership(new Membership(loggedInUser,group,1));
-            if (result == true)
+            boolean result = db.addMembership(new Membership(loggedInUser,group,0));
+            if (result == true) {
                 JOptionPane.showMessageDialog(null, "Successfully Join Group", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
+                return true;
+            }
         } 
         else {
             JOptionPane.showMessageDialog(null, "IC is not right ", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
         }
-
+        return false;
     }
 
 //Get Current Date As CreateDate.
