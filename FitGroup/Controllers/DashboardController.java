@@ -31,16 +31,36 @@ public class DashboardController {
 
     public int checkIn () {
         int newScore = loggedInUser.getScore() + 1;
-    	loggedInUser.setScore(newScore);
+        loggedInUser.setScore(newScore);
         db.updateUser(loggedInUser);
-    	return newScore;
+        return newScore;
+    }
+
+    private boolean testAdmin (String groupName) {
+        if (db.searchMembership(groupName, loggedInUser.getUsername()).getIsAdmin() == 0) {
+            JOptionPane.showMessageDialog(null, "You are not an admin for this group.", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    public void makeAdmin (String username, String groupName) {
+        if (!testAdmin(groupName)) return;
+
+        Membership membership = db.searchMembership(groupName, username);
+        if (membership.getIsAdmin() == 1) {
+            JOptionPane.showMessageDialog(null, "This member is already an admin.", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        } else {
+            membership.setAdmin(1);
+            db.updateMembership(membership);
+            JOptionPane.showMessageDialog(null, username + " is now an admin.", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     public void approveRequests (String groupName) {
-        if (db.searchMembership(groupName, loggedInUser.getUsername()).getIsAdmin() == 0) {
-            JOptionPane.showMessageDialog(null, "You are not an admin for this group.", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
+        if (!testAdmin(groupName)) return;
+
         ApproveRequestsView approveRequestsView = ApproveRequestsView.createWindow(db, loggedInUser, view);
     }
 

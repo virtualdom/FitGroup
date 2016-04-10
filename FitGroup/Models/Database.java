@@ -206,6 +206,61 @@ public class Database {
         file.renameTo(new File("./FitGroup/Models/users.txt"));
     }
 
+    public void updateMembership (Membership membership) {
+        Scanner membershipReader = null;    
+        BufferedWriter membershipWriter = null;
+        File file = null;
+        String groupname, username, adminStatus;
+        
+        try {
+            file = new File("./FitGroup/Models/memberships.txt");
+            membershipReader = new Scanner(file);
+            membershipWriter = new BufferedWriter(new FileWriter("./FitGroup/Models/memberships2.txt", true));
+        } catch (Exception e) {
+            System.out.println("ERROR: could not open memberships.txt for update membership");
+            System.exit(0);
+        }
+        
+        for (int i = 0; i < memberships.size(); i++)
+            if (memberships.get(i).getUser().getUsername().equals(membership.getUser().getUsername()) && memberships.get(i).getGroup().getname().equals(membership.getGroup().getname())) {
+                memberships.set(i, membership);
+                break;
+            }
+
+        while (membershipReader.hasNext()) {
+            groupname = membershipReader.next();
+            username = membershipReader.next();
+            adminStatus = membershipReader.next();
+            try {
+                if (username.equals(membership.getUser().getUsername()) && groupname.equals(membership.getGroup().getname())) {
+                    membershipWriter.write(membership.getGroup().getname() + "\t" + membership.getUser().getUsername() + "\t" + membership.getIsAdmin() + "\n");
+                }
+                else
+                    membershipWriter.write(groupname + "\t" + username + "\t" + adminStatus + "\n");
+            } catch (IOException e) {
+                System.out.println("ERROR: could not finish updating users.txt for update user");
+                System.exit(0);
+            }
+        }
+
+        try {
+            membershipReader.close();
+            membershipWriter.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: could not close files for update Membership");
+            System.exit(0);
+        }
+
+        file.delete();
+    // try {
+        file = new File("./FitGroup/Models/memberships2.txt");
+    // } catch (FileNotFoundException e) {
+    //     System.out.println("ERROR: could not rename users2.txt");
+    //     System.exit(0);
+    // }
+        file.renameTo(new File("./FitGroup/Models/memberships.txt"));
+    }
+
 
     public boolean addGroup (Group group) {
         BufferedWriter userTextfile;
@@ -340,7 +395,7 @@ public class Database {
                 if (!username.equals(request.getUser().getUsername()) || !groupname.equals(request.getGroup().getname()))
                     requestWriter.write(username + "\t" + groupname + "\n");
             } catch (IOException e) {
-                System.out.println("ERROR: could not finish updating requests.txt for update user");
+                System.out.println("ERROR: could not finish updating requests.txt for delete request");
                 System.exit(0);
             }
         }

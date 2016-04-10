@@ -1,5 +1,7 @@
 package FitGroup.views;
 
+import javax.swing.JOptionPane;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -15,6 +17,7 @@ public class DashboardView extends FitGroupView {
     private JLabel workoutCountLabel;
     private DefaultTableModel defaulttable;
     private JComboBox comboBox;
+    private JTable table;
 
     public DashboardView (User user, Database db) {
 
@@ -74,10 +77,13 @@ public class DashboardView extends FitGroupView {
         
         JButton actionButton = new JButton("Query");
         actionButton.addActionListener(new ButtonClickListener());
-        actionButton.setActionCommand("Query");        
+        actionButton.setActionCommand("Query");
         JButton approveButton = new JButton("Approve Requests");
         approveButton.addActionListener(new ButtonClickListener());
         approveButton.setActionCommand("Approve Requests");
+        JButton makeAdminButton = new JButton("Make Admin");
+        makeAdminButton.addActionListener(new ButtonClickListener());
+        makeAdminButton.setActionCommand("Make Admin");
         
         JPanel toppanel = new JPanel(); 
         toppanel.setLayout(new BoxLayout(toppanel, BoxLayout.Y_AXIS )); 
@@ -87,6 +93,7 @@ public class DashboardView extends FitGroupView {
         
         buttonPanel.add(Box.createHorizontalGlue ()); 
         buttonPanel.add(actionButton); 
+        buttonPanel.add(makeAdminButton); 
         buttonPanel.add(approveButton); 
         toppanel.add(Box.createVerticalStrut (10)); 
         toppanel.add(buttonPanel); 
@@ -95,7 +102,7 @@ public class DashboardView extends FitGroupView {
         JPanel bottompanel = new JPanel(); 
         
         defaulttable = new  DefaultTableModel ();
-        JTable table = new  JTable(defaulttable); 
+        table = new  JTable(defaulttable); 
         defaulttable.addColumn("member");
         defaulttable.addColumn("scores");
          
@@ -150,6 +157,12 @@ public class DashboardView extends FitGroupView {
             else if (command.equals("Approve Requests")) {
                 controller.approveRequests(comboBox.getSelectedItem().toString());
             } 
+            else if (command.equals("Make Admin")) {
+                if (table.getSelectedRow() >= 0)
+                    controller.makeAdmin(defaulttable.getValueAt(table.getSelectedRow(), 0).toString(), comboBox.getSelectedItem().toString());
+                else
+                    JOptionPane.showMessageDialog(null, "Select a user from the group first", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
+            }
             else if (command.equals("Create Group")) {
                 controller.createGroup();
             } 
