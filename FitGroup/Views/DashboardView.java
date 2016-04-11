@@ -27,7 +27,7 @@ public class DashboardView extends FitGroupView {
 
     private void prepareGUI () {
         mainFrame = new JFrame("FitGroup | Social Workouts");
-        mainFrame.setSize(600,600);
+        mainFrame.setSize(800,600);
         mainFrame.setResizable(false);
         mainFrame.setLayout(new FlowLayout()); 
 
@@ -63,8 +63,12 @@ public class DashboardView extends FitGroupView {
         JButton joinGroupButton = new JButton("Join Group");
         joinGroupButton.setActionCommand("Join Group");
         joinGroupButton.addActionListener(new ButtonClickListener());
+        JButton leaveGroupButton = new JButton("Leave Group");
+        leaveGroupButton.setActionCommand("Leave Group");
+        leaveGroupButton.addActionListener(new ButtonClickListener());
         groupPanel.add(createGroupButton);
         groupPanel.add(joinGroupButton);
+        groupPanel.add(leaveGroupButton);
 
         actionPanel.add(checkInPanel);
         actionPanel.add(groupPanel);
@@ -173,6 +177,11 @@ public class DashboardView extends FitGroupView {
             else if (command.equals("Create Group")) {
                 controller.createGroup();
             } 
+            else if (command.equals("Leave Group")) {
+                controller.leaveGroup(comboBox.getSelectedItem().toString());
+                JOptionPane.showMessageDialog(null, "Successfully leave the group", "InfoBox: " , JOptionPane.INFORMATION_MESSAGE);
+                updateCombobox();
+            }
             else if (command.equals("Change IC")) {
                 controller.changeIC(comboBox.getSelectedItem().toString());
             } 

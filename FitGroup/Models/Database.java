@@ -361,6 +361,57 @@ public class Database {
         }
     }
 
+    public void leaveGroup(String groupname,User user) {
+        
+        Scanner userReader = null;    
+        BufferedWriter userWriter = null;
+        File file = null;
+        String username, groupName, adminstatus;
+        
+        try {
+            file = new File("./FitGroup/Models/memberships.txt");
+            userReader = new Scanner(file);
+            userWriter = new BufferedWriter(new FileWriter("./FitGroup/Models/memberships2.txt", true));
+        } catch (Exception e) {
+            System.out.println("ERROR: could not open memberships.txt for update membership");
+            System.exit(0);
+        }
+        
+        for (int i = 0; i < memberships.size(); i++)
+            if (memberships.get(i).getUser().getUsername().equals(user.getUsername())&&memberships.get(i).getGroup().getname().equals(groupname)) {
+                memberships.remove(i);
+                break;
+            }
+            
+            
+        while (userReader.hasNext()) {
+            groupName = userReader.next();    
+            username = userReader.next();    
+            adminstatus = userReader.next();    
+            
+            try {
+                if(!groupName.equals(groupname) || !username.equals(user.getUsername()))
+                    userWriter.write(groupName + "\t" + username + "\t" + adminstatus + "\n");
+            } catch (IOException e) {
+                System.out.println("ERROR: could not finish updating memberships.txt for update membership");
+                System.exit(0);
+            }
+            
+        }
+            
+        try {
+            userReader.close();
+            userWriter.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: could not close files for update membership");
+            System.exit(0);
+        }
+         
+        file.delete();
+        file = new File("./FitGroup/Models/memberships2.txt");
+        file.renameTo(new File("./FitGroup/Models/memberships.txt"));
+    }
+
     public ArrayList<Request> searchRequestsByGroup (String groupName) {
         ArrayList<Request> tempreq = new ArrayList<Request>(0);
         for (int i = 0; i < requests.size(); i++) {
