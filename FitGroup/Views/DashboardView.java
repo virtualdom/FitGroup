@@ -63,11 +63,15 @@ public class DashboardView extends FitGroupView {
         JButton joinGroupButton = new JButton("Join Group");
         joinGroupButton.setActionCommand("Join Group");
         joinGroupButton.addActionListener(new ButtonClickListener());
+        JButton updateInfoButton = new JButton("Update info");
+        updateInfoButton.setActionCommand("Update info");
+        updateInfoButton.addActionListener(new ButtonClickListener());
         JButton leaveGroupButton = new JButton("Leave Group");
         leaveGroupButton.setActionCommand("Leave Group");
         leaveGroupButton.addActionListener(new ButtonClickListener());
         groupPanel.add(createGroupButton);
         groupPanel.add(joinGroupButton);
+        groupPanel.add(updateInfoButton);
         groupPanel.add(leaveGroupButton);
 
         actionPanel.add(checkInPanel);
@@ -177,6 +181,9 @@ public class DashboardView extends FitGroupView {
             else if (command.equals("Create Group")) {
                 controller.createGroup();
             } 
+            else if (command.equals("Update info")) {
+                controller.updateInformation();
+            }
             else if (command.equals("Leave Group")) {
                 controller.leaveGroup(comboBox.getSelectedItem().toString());
                 JOptionPane.showMessageDialog(null, "Successfully leave the group", "InfoBox: " , JOptionPane.INFORMATION_MESSAGE);

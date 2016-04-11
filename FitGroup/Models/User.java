@@ -6,20 +6,23 @@ public class User {
     private int age;
     private int weight;
     private int score;
+    private int userType;
 
-    public User (String username, String password, int age, int weight, int score) {
+    public User (String username, String password, int age, int weight, int userType, int score) {
         this.username = username;
         this.password = password;
         this.age = age;
         this.weight = weight;
+        this.userType = userType;
         this.score = score;
     }
 
-    public User (String username, String password, int age, int weight) {
+    public User (String username, String password, int age, int weight, int userType) {
         this.username = username;
         this.password = password;
         this.age = age;
         this.weight = weight;
+        this.userType = userType;
         this.score = 0;
     }
 
@@ -29,6 +32,10 @@ public class User {
 
     public String getPassword () {
         return password;
+    }
+
+    public int getType () {
+        return userType;
     }
 
     public int getAge () {

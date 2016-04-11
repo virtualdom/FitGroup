@@ -24,7 +24,7 @@ public class Database {
 
     private void importUsers () {
         users = new ArrayList<User>(0);
-        int age, weight, score;
+        int age, weight, score, userType;
         String username, password;
         Scanner userScanner;    
 
@@ -41,8 +41,9 @@ public class Database {
             password = userScanner.next();
             age = userScanner.nextInt();
             weight = userScanner.nextInt();
+            userType = userScanner.nextInt();
             score = userScanner.nextInt();
-            users.add(new User(username, password, age, weight, score));
+            users.add(new User(username, password, age, weight, userType, score));
         }
 
         userScanner.close();
@@ -143,7 +144,7 @@ public class Database {
         BufferedWriter userTextfile;
         try {
             userTextfile = new BufferedWriter(new FileWriter("./FitGroup/Models/users.txt", true));
-            userTextfile.write(user.getUsername() + "\t" + user.getPassword() + "\t" + user.getWeight() + "\t" + user.getAge() + "\t" + user.getScore() + "\n");
+            userTextfile.write(user.getUsername() + "\t" + user.getPassword() + "\t" + user.getWeight() + "\t" + user.getAge() + "\t" + user.getType() + "\t" + user.getScore() + "\n");
             userTextfile.close();
             users.add(user);
         } catch (IOException error) {
@@ -177,7 +178,7 @@ public class Database {
             username = userReader.next();
             try {
                 if (username.equals(user.getUsername())) {
-                    userWriter.write(user.getUsername() + "\t" + user.getPassword() + "\t" + user.getWeight() + "\t" + user.getAge() + "\t" + user.getScore() + "\n");
+                    userWriter.write(user.getUsername() + "\t" + user.getPassword() + "\t" + user.getWeight() + "\t" + user.getAge() + "\t" + user.getType() + "\t" + user.getScore() + "\n");
                     username = userReader.nextLine();
                 }
                 else

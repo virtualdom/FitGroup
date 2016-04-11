@@ -1,6 +1,7 @@
 package FitGroup.controllers;
 
 import FitGroup.models.*;
+import FitGroup.views.CoachDashboardView;
 import FitGroup.views.DashboardView;
 import FitGroup.views.LoginView;
 import FitGroup.views.SignUpView;
@@ -10,7 +11,7 @@ public class LoginController {
     private LoginView view;
 
     public LoginController (Database database, LoginView view) {
-    	this.db = database;
+        this.db = database;
         this.view = view;
     }
 
@@ -19,7 +20,10 @@ public class LoginController {
         if (user == null) return 0;
         else if (user.getPassword().equals(password)) {
             view.getFrame().setVisible(false);
-            DashboardView dashboardWindow = new DashboardView(user, db);
+            if (user.getType() == 0){
+                DashboardView dashboardWindow = new DashboardView(user, db);}
+            else {
+                CoachDashboardView CoachdashboardWindow = new CoachDashboardView(user, db);}
             return 1;
         }
         else return -1;

@@ -10,6 +10,7 @@ import FitGroup.views.ChangeICView;
 import FitGroup.views.DashboardView;
 import FitGroup.views.JoinView;
 import FitGroup.views.ApproveRequestsView;
+import FitGroup.views.UpdateView;
 
 public class DashboardController {
     private User loggedInUser;
@@ -80,6 +81,10 @@ public class DashboardController {
 
     public void leaveGroup(String string){
         db.leaveGroup(string,loggedInUser);
+    }
+
+    public void updateInformation () {
+        UpdateView updateView = UpdateView.createWindow(db,loggedInUser);    
     }
 
     public String[] getGroupNames () {
