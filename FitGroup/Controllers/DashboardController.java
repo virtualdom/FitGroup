@@ -70,6 +70,7 @@ public class DashboardController {
     }
 
     public void changeIC (String groupname) {
+        if (!testAdmin(groupName)) return;
     	ChangeICView changeICView = ChangeICView.createWindow(db, db.searchGroup(groupname), view);
     }
 
