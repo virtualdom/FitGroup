@@ -1,7 +1,5 @@
 package FitGroup.views;
 
-import javax.swing.JOptionPane;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -17,17 +15,28 @@ public class DashboardView extends FitGroupView {
     private JLabel workoutCountLabel;
     private DefaultTableModel defaulttable;
     private JComboBox comboBox;
-    private JTable table;
+    private String[] groupnameArray;
+    
 
     public DashboardView (User user, Database db) {
 
-        this.controller = new DashboardController(user, db, this);
+        this.controller = new DashboardController(user, db);
         prepareGUI();
     }
+    
+    private void UpdateGroupList(){
+    	groupnameArray  = controller.getGroupNames();
+    	comboBox.removeAllItems();
+    	for(int i=0;i<groupnameArray.length;i++)
+    		 comboBox.addItem(groupnameArray[i]);
+    	comboBox.repaint();
+    	comboBox.updateUI();
+    }
+    
 
     private void prepareGUI () {
         mainFrame = new JFrame("FitGroup | Social Workouts");
-        mainFrame.setSize(800,600);
+        mainFrame.setSize(600,600);
         mainFrame.setResizable(false);
         mainFrame.setLayout(new FlowLayout()); 
 
@@ -63,12 +72,14 @@ public class DashboardView extends FitGroupView {
         JButton joinGroupButton = new JButton("Join Group");
         joinGroupButton.setActionCommand("Join Group");
         joinGroupButton.addActionListener(new ButtonClickListener());
-        JButton leaveGroupButton = new JButton("Leave Group");
-        leaveGroupButton.setActionCommand("Leave Group");
-        leaveGroupButton.addActionListener(new ButtonClickListener());
+        
+        JButton updateInfoButton = new JButton("Update info");
+        updateInfoButton.setActionCommand("Update info");
+        updateInfoButton.addActionListener(new ButtonClickListener());
+                
         groupPanel.add(createGroupButton);
         groupPanel.add(joinGroupButton);
-        groupPanel.add(leaveGroupButton);
+        groupPanel.add(updateInfoButton);
 
         actionPanel.add(checkInPanel);
         actionPanel.add(groupPanel);
@@ -79,41 +90,30 @@ public class DashboardView extends FitGroupView {
         String[] groupnameArray = controller.getGroupNames();
         comboBox=new JComboBox(groupnameArray); 
         
+        //comboBox.addItemListener((ItemListener) this);
+        comboBox.addItemListener(new listClickListener());
+        
+                
         JButton actionButton = new JButton("Query");
         actionButton.addActionListener(new ButtonClickListener());
         actionButton.setActionCommand("Query");
-        JButton approveButton = new JButton("Approve Requests");
-        JButton changeICButton = new JButton("Change Group IC");
-        approveButton.addActionListener(new ButtonClickListener());
-        changeICButton.addActionListener(new ButtonClickListener());
-        approveButton.setActionCommand("Approve Requests");
-        changeICButton.setActionCommand("Change IC");
-        JButton makeAdminButton = new JButton("Make Admin");
-        makeAdminButton.addActionListener(new ButtonClickListener());
-        makeAdminButton.setActionCommand("Make Admin");
         
         JPanel toppanel = new JPanel(); 
         toppanel.setLayout(new BoxLayout(toppanel, BoxLayout.Y_AXIS )); 
         JPanel buttonPanel = new JPanel(); 
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS )); 
-        JPanel bottomButtonPanel = new JPanel(); 
-        bottomButtonPanel.setLayout(new BoxLayout(bottomButtonPanel, BoxLayout.X_AXIS )); 
         buttonPanel.add(comboBox); 
         
         buttonPanel.add(Box.createHorizontalGlue ()); 
         buttonPanel.add(actionButton); 
-        buttonPanel.add(makeAdminButton); 
-        buttonPanel.add(approveButton); 
-        bottomButtonPanel.add(changeICButton); 
         toppanel.add(Box.createVerticalStrut (10)); 
         toppanel.add(buttonPanel); 
-        toppanel.add(bottomButtonPanel); 
         toppanel.add(Box.createVerticalStrut (10));
         
         JPanel bottompanel = new JPanel(); 
         
         defaulttable = new  DefaultTableModel ();
-        table = new  JTable(defaulttable); 
+        JTable table = new  JTable(defaulttable); 
         defaulttable.addColumn("member");
         defaulttable.addColumn("scores");
          
@@ -147,45 +147,27 @@ public class DashboardView extends FitGroupView {
         mainFrame.setVisible(true);  
     }
 
-    public void updateCombobox () {
-        comboBox.removeAllItems();
-        String[] groupnameArray = controller.getGroupNames();
-        for (int i = 0; i < groupnameArray.length; i++) {
-            comboBox.addItem(groupnameArray[i]); 
-        }
-    }
-
     private class ButtonClickListener implements ActionListener {
         public void actionPerformed (ActionEvent e) {
             ArrayList<User> tmpusers = new ArrayList<User>(5);
             String command = e.getActionCommand(); 
+            System.out.println("Successful login: " + command);
+            
             if( command.equals("Check in"))  {
                 workoutCountLabel.setText(new Integer(controller.checkIn()).toString());
             }
             else if (command.equals("Join Group")) {
                 controller.joinGroup();
             } 
-            else if (command.equals("Approve Requests")) {
-                controller.approveRequests(comboBox.getSelectedItem().toString());
-            } 
-            else if (command.equals("Make Admin")) {
-                if (table.getSelectedRow() >= 0)
-                    controller.makeAdmin(defaulttable.getValueAt(table.getSelectedRow(), 0).toString(), comboBox.getSelectedItem().toString());
-                else
-                    JOptionPane.showMessageDialog(null, "Select a user from the group first", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
-            }
             else if (command.equals("Create Group")) {
                 controller.createGroup();
-            } 
-            else if (command.equals("Leave Group")) {
-                controller.leaveGroup(comboBox.getSelectedItem().toString());
-                JOptionPane.showMessageDialog(null, "Successfully leave the group", "InfoBox: " , JOptionPane.INFORMATION_MESSAGE);
-                updateCombobox();
+            }    
+            else if (command.equals("Update info")) {
+            	controller.updateInformation();
             }
-            else if (command.equals("Change IC")) {
-                controller.changeIC(comboBox.getSelectedItem().toString());
-            } 
-            else {                
+            else {             
+            	System.out.println("else " );
+
                 for(int i = defaulttable.getRowCount() - 1; i >=0; i--) {
                     defaulttable.removeRow(i); 
                 }
@@ -195,5 +177,20 @@ public class DashboardView extends FitGroupView {
                     defaulttable.addRow(tableData.get(j));
             }
         }     
+    }
+    
+    private class listClickListener implements ItemListener {
+    		@Override
+		public void itemStateChanged(ItemEvent e) {
+    			
+    			 switch (e.getStateChange())
+    			 {
+    			 case ItemEvent.SELECTED: 
+    			  System.out.println("select" + e.getItem());
+    			 break;
+    			 }
+			// TODO Auto-generated method stub
+			//UpdateGroupList();
+		}
     }
 }

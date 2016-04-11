@@ -23,17 +23,15 @@ public class JoinView extends FitGroupView implements ActionListener {
 	private static boolean instantiated = false;
 	private static JoinView instance;
 	private JoinController controller;
-	private DashboardView dashboard;
 
-    private JoinView (Database db,User loggedInUser, DashboardView dbv) {
+    private JoinView (Database db,User loggedInUser) {
         controller = new JoinController(db, this,loggedInUser);
-        dashboard = dbv;
         prepareGUI();
     }
 
-	public static JoinView createWindow (Database db, User loggedInUser, DashboardView dbv) {
+	public static JoinView createWindow (Database db, User loggedInUser) {
 		if (!instantiated) {
-			instance = new JoinView(db,loggedInUser, dbv);
+			instance = new JoinView(db,loggedInUser);
 			instantiated = true;
 		}
 
@@ -101,10 +99,6 @@ public class JoinView extends FitGroupView implements ActionListener {
 		//controller.JoinGroup()
 		String username = textField.getText();
 		String IC = new String(passwordField.getPassword());
-		boolean result = controller.JoinGroup(username, IC);
-		if (result) {
-			mainFrame.setVisible(false);
-			dashboard.updateCombobox();
-		}
+		controller.JoinGroup(username, IC);
 	}
 }

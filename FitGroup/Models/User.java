@@ -5,22 +5,25 @@ public class User {
     private String password;
     private int age;
     private int weight;
+    private int userType;
     private int score;
 
-    public User (String username, String password, int age, int weight, int score) {
+    public User (String username, String password, int age, int weight, int userType, int score) {
         this.username = username;
         this.password = password;
         this.age = age;
         this.weight = weight;
+        this.userType = userType;
         this.score = score;
     }
 
-    public User (String username, String password, int age, int weight) {
+    public User (String username, String password, int age, int weight,int userType) {
         this.username = username;
         this.password = password;
         this.age = age;
         this.weight = weight;
         this.score = 0;
+        this.userType = userType;
     }
 
     public String getUsername () {
@@ -37,6 +40,10 @@ public class User {
 
     public int getWeight () {
         return weight;
+    }
+    
+    public int getType () {
+        return userType;
     }
     
     public int getScore () {
@@ -57,5 +64,6 @@ public class User {
     
     public void setScore (int score) {
         this.score = score;
-    } 
+    }
+    
 }
